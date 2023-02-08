@@ -4,7 +4,7 @@ The script (main.py) selects the application, initiate its processing and reads 
 
 #### dependencies
 1. https://pypi.org/project/pyscard/
-2. https://github.com/knovichikhin/pyemv - I took only a single unit from it to work with TLV data objects (tlv.py). The file contains modifications and put into into the project for convenience purposes. Check pyemv fork to see the actual changes
+2. https://github.com/knovichikhin/pyemv - I took only a single unit from it to work with TLV data objects (tlv.py). The file contains modifications and I put it into the project for convenience purposes. Check pyemv fork to see the actual changes
 
 ## application selection
 the script attempts to read the PSE (Payment System Environment) and, when available, reads and lists the application(s) from it. If there is just a single application available it selected automatically. When there are more that one applications present on the chip, the script prompts the user to enter the application number to proceed with.  
