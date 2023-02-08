@@ -334,10 +334,3 @@ def InitiateApplicationProcessing(pdol):
         return response["80"][4:]
     else:
         return None
-
-def GeldKarteBalance():
-    app_l = toBytes("D27600002545500200")
-    apdu = SELECT + [len(app_l)] + app_l
-    SendAPDU(apdu, f"SELECT")
-
-    ReadRecord(24, 1, raw=True)  # SFI 24, record 1 = Balance. First 3 bytes
