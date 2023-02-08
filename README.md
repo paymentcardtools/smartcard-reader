@@ -1,6 +1,6 @@
 # smartcard
 basic EMV smart card reader (contact only).  
-The script (main.py) selects the application, initiate its processing and read public data.
+The script (main.py) selects the application, initiate its processing and reads public data.
 
 ## application selection
 the script attempts to read the PSE (Payment System Environment) and, when available, reads and lists the application(s) from it. If there is just a single application available it selected automatically. When there are more that one applications present on the chip, the script prompts the user to enter the application number to proceed with.
