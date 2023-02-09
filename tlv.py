@@ -24,16 +24,6 @@ import typing as _t
 __all__ = ["decode", "DecodeError", "encode", "EncodeError"]
 
 
-class DictList(dict):
-    def __setitem__(self, key, value):
-        try:
-            # Assumes there is a list on the key
-            self[key].append(value)
-        except KeyError: # If it fails, because there is no key
-            super(DictList, self).__setitem__(key, value)
-        except AttributeError: # If it fails because it is not a list
-            super(DictList, self).__setitem__(key, [self[key], value])
-
 class DecodeError(ValueError):
     r"""Subclass of ValueError that describes TLV decoding error.
 
@@ -54,7 +44,7 @@ class DecodeError(ValueError):
         msg: str,
         tag: str,
         offset: int,
-        tlv: _t.Type[DictList],
+        tlv: _t.Dict[str, _t.Any],
     ):
         errmsg = f"{msg}: tag '{tag}', offset {offset}."
         ValueError.__init__(self, errmsg)
@@ -89,23 +79,21 @@ class EncodeError(ValueError):
 # fmt: off
 _S = _t.TypeVar("_S")
 @_t.overload
-def decode(data: bytes) -> _t.Type[DictList]: ...
+def decode(data: bytes) -> _t.Dict[str, _t.Any]: ...
 @_t.overload
-def decode(data: bytes, *, simple: _t.Optional[bool]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, simple: _t.Optional[bool]) -> _t.Dict[str, _t.Any]: ...
 @_t.overload
-def decode(data: bytes, *, dol: _t.Optional[bool]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Dict[str, _t.Any]: ...
 @_t.overload
-def decode(data: bytes, *, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Dict[str, _t.Any]: ...
 @_t.overload
-def decode(data: bytes, *, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True) -> _t.Dict[str, bytes]: ...
 @_t.overload
-def decode(data: bytes, *, flatten: _t.Optional[bool] = True) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Dict[str, _S]: ...
 @_t.overload
-def decode(data: bytes, *, flatten: _t.Optional[bool] = True, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool]) -> _t.Dict[str, bytes]: ...
 @_t.overload
-def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool]) -> _t.Type[DictList]: ...
-@_t.overload
-def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Type[DictList]: ...
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Dict[str, _S]: ...
 # fmt: on
 
 
@@ -116,7 +104,7 @@ def decode(
     simple: _t.Optional[bool] = None,
     dol: _t.Optional[bool] = None,
     convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]] = None,
-) -> _t.Type[DictList]:
+) -> _t.Dict[str, _t.Any]:
     r"""Decode TLV data.
 
     Parameters
@@ -176,7 +164,7 @@ def decode(
     if convert is None:
         convert = lambda t, v: bytes(v)
 
-    dec: _t.Type[DictList] = {}
+    dec: _t.Dict[str, _t.Any] = {}
 
     try:
         _decode(data, 0, len(data), dec, flatten, simple, dol, convert)
@@ -192,7 +180,7 @@ def _decode(
     data: _t.Union[bytes, bytearray],
     ofst: int,
     ofst_limit: int,
-    dec: _t.Type[DictList],
+    dec: _t.Dict[str, _t.Any],
     flatten: bool,
     simple: bool,
     dol: bool,
