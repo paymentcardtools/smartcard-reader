@@ -16,7 +16,7 @@ returns
   - content of Tag 9F4D - LogEntry
 ```
 ## initiate application processing
-the script checks the PDOL passed as a parameter and depending on its content constructs the GPO (Get Processing Options) command. If PDOL is empty, the GPO generated without parameters. When PDOL contains a list of objects to be used in GPO, the script constructs the parameter string using the predefined list of parameters defined in TERMCONFIG dictionary.
+the script checks the PDOL passed as a parameter and depending on its content constructs the GPO (Get Processing Options) command. If PDOL is empty, the GPO generated without parameters. When PDOL contains a list of objects to be used in GPO, the script constructs the parameter string using the predefined list of objects from TERMCONFIG dictionary.
 ```
 def InitiateApplicationProcessing(pdol)
 returns
