@@ -1,14 +1,14 @@
 # smartcard-reader
 basic EMV smart card reader (contact only).  
-The script (main.py) selects the application, initiate its processing and reads public data.
+The script (main.py) selects the application, initiates its processing and reads public data.
 
 #### dependencies
 1. https://pypi.org/project/pyscard/
-2. https://github.com/knovichikhin/pyemv - I took only a single unit from it to work with TLV data objects (tlv.py). The file contains modifications and I put it into the project for convenience purposes. Check pyemv fork to see the actual changes
+2. https://github.com/knovichikhin/pyemv - I took only a single unit from it to work with TLV data objects (tlv.py). The file contains modifications and I put it in the project for ease of use. Check pyemv fork to see the actual changes
 
 ## application selection
-the script attempts to read the PSE (Payment System Environment) and, when available, reads and lists the application(s) from it. If there is just a single application available, it selected automatically. When there are more than one application present on the chip, the script prompts the user to enter the application number to proceed with.
-If there is no PSE available, the script attempts to select Visa (A0000000031010) and Mastercard (A0000000041010) AIDs
+the script attempts to read the PSE (Payment System Environment) and, when available, reads and lists the application(s) from it. If there is just a single application available, it selected automatically. When more than one application is present on the chip, the script prompts the user to enter the application number to proceed.  
+If there is no PSE available, it attempts to select Visa (A0000000031010) and Mastercard (A0000000041010) AIDs
 ```
 def ApplicationSelection()
 returns 
@@ -16,14 +16,14 @@ returns
   - content of Tag 9F4D - LogEntry
 ```
 ## initiate application processing
-the script checks the PDOL passed as a parameter and depending on its content constructs the GPO (Get Processing Options) command. If PDOL is empty, the GPO generated without parameters. When PDOL contains a list of objects to be used in GPO, the script constructs the parameter string using the predefined list of objects from TERMCONFIG dictionary.
+the script checks the PDOL passed as a parameter and depending on its content constructs the GPO (Get Processing Options) command. If PDOL is empty, the GPO generated without parameters. When PDOL contains a list of objects to be used in GPO, the script builds the parameter string using the pre-defined list of objects in the TERMCONFIG dictionary.
 ```
 def InitiateApplicationProcessing(pdol)
 returns
   - AFL (Application File Locator)
 ```
 ### read application data
-reads the data from the records defined in AFL
+reads the data from the records defined by AFL
 ```
 def ReadApplicationData(afl)
 ```
