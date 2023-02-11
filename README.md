@@ -1,4 +1,4 @@
-# smartcard
+# smartcard-reader
 basic EMV smart card reader (contact only).  
 The script (main.py) selects the application, initiate its processing and reads public data.
 
