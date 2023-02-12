@@ -12,7 +12,7 @@ If there is no PSE available, it attempts to select Visa (A0000000031010) and Ma
 ```
 def ApplicationSelection()
 returns 
-  - content of Tag 9F38 - PODL (Processing Options Data Object List)
+  - content of Tag 9F38 - PDOL (Processing Options Data Object List)
   - content of Tag 9F4D - LogEntry
 ```
 ## initiate application processing
