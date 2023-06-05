@@ -21,9 +21,18 @@ GET_DATA = [0x80, 0xCA, 0x00, 0x00]   # default P1 and P2
 
 # data for GPO
 TERMCONFIG = {
-    "9F40": "F000F0A001",
+    "5F2A": "0978",
+    "95": "0000000000",
+    "9A": "230605",
+    "9C": "00",
+    "9F02": "000000000100",
+    "9F03": "000000000000",
+    "9F1A": "0528",
     "9F33": "E0F0C8",
-    "9F35": "22"
+    "9F35": "22",
+    "9F37": "01234567",
+    "9F40": "F000F0A001",
+    "9F66": "10000000"
 }
 
 cardservice = None
@@ -57,7 +66,7 @@ def SendAPDU(apdu, log = None, raw = False):
     if (sw1, sw2) == (0x90, 0x00):
         print("<r-apdu:", toHexString(response))
 
-    if sw1 == 0x61:   # Command successfully executed; ‘XX’ bytes (in SW2) of data are available and can be requested using GET RESPONSE.
+    if sw1 == 0x61:   # Command successfully executed; ‘xx’ bytes (in SW2) of data are available and can be requested using GET RESPONSE.
         print(">c-apdu:", toHexString(GET_RESPONSE + [sw2]))
         response, sw1, sw2 = cardservice.connection.transmit(GET_RESPONSE + [sw2])
         print(f"sw {sw1:02X} {sw2:02X}")
@@ -83,8 +92,8 @@ def ReadLogs(logentry):
     print(f"Log entry SFI {logsfi}, number of entries {lognum}")
 
     apdu = GET_DATA
-    GET_DATA[P1] = 0x9F
-    GET_DATA[P2] = 0x4F
+    apdu[P1] = 0x9F
+    apdu[P2] = 0x4F
     logfmt, sw1, sw2 = SendAPDU(apdu, f"Get log format")
     format = tlv.decode(bytes.fromhex(logfmt["9F4F"]), dol=True)
 
